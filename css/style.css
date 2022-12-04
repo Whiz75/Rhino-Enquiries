@@ -1,0 +1,54 @@
+.wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1em;
+  }
+  
+  .input-form {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+
+  h2{
+    text-align: center;
+    color: black;
+    font-family: fantasy;
+  }
+
+  label{
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: monospace;
+    margin-top: 10px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .row {
+    margin-left: -5px;
+    margin-right: -5px;
+    margin-bottom: 10px;
+  }
+
+  .col-6 {
+    width: 50%;
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+  }
+
+  footer{
+    background-color: maroon;
+    color: white;
+    height: 30px;
+    padding: 5px;
+    width: 100%;
+  }

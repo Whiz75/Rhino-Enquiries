@@ -27,7 +27,7 @@
       <h2>ENQUIRY FORM</h2>
 
       <div class="wrapper" class="container-fluid">
-         <form name="registerForm" method="" action="">
+         <form name="registerForm" method="POST" action="">
             <div class="row">
 
                <!-- FIRSTNAME -->
@@ -137,11 +137,7 @@
       </div>
       
       <!-- FOOTER -->
-      <footer>
-          <div class="text-center p-4">
-            © 2022 Rhino Africa Enquiries
-          </div>
-      </footer>
+      <footer><div class="text-center p-4"> © 2022 Rhino Africa Enquiries</div></footer>
       
     </body>
 </html>

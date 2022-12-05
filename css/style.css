@@ -7,7 +7,6 @@
   .input-form {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     box-sizing: border-box;
   }
 
@@ -18,11 +17,10 @@
   }
 
   label{
-    color: black;
+    color: grey;
     font-size: 1em;
     font-weight: bold;
     font-family: monospace;
-    margin-top: 2px;
   }
   
   .btn {

@@ -28,41 +28,40 @@
       <?php
          if(isset($_POST['enquire']))
          {
-            //$website_reference_number = "TST".'-'.$firstname[0].''.$lastname[0];
-            
+
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
+            $website_reference_number = "TST".'-'.substr($firstname,0).substr($lastname,0);
             $email = $_POST['email_address']; 
             $country = $_POST['from_country'];
-            $phonenumber = $_POST['phone_number'];
-            $holidaytype = $_POST['holiday_type'];
+            $contact_number = $_POST['phone_number'];
+            $holiday_type = $_POST['holiday_type'];
             $adults = $_POST['no_of_adults'];
             $children = $_POST['no_of_children'];
-            $arrivaldate = date('d-m-Y', strtotime($_POST['arrival_date']));
-            $departuredate = date('d-m-Y', strtotime($_POST['departure_date']));
+            $arrival_date = date('d-m-Y', strtotime($_POST['arrival_date']));
+            $departure_date = date('d-m-Y', strtotime($_POST['departure_date']));
             $comment = $_POST['enquiry_comment'];  
 
-            if($arrivaldate > $departuredate)
+            if($arrival_date > $departure_date)
             {
                echo "<script> alert('Arrival Date should be greater than Departure Date'); </script>";
             }
             else 
             {
-
-               
                $url = 'https://eddy.rhinoafrica.com/submit';
 
-               $data = array('website_reference_number' => "TST".'-'.$firstname[0].'-'.$lastname[0],
+               $data = array(
+                       'website_reference_number' => $website_reference_number,
                            'first_name' => $firstname,
                            'last_name' => $lastname,
                            'email' => $email,
                            'country' => $country, 
-                           'contact_number' => $phonenumber,
-                           'holiday_type' => $holidaytype, 
+                           'contact_number' => $contact_number,
+                           'holiday_type' => $holiday_type,
                            'adults' => $adults,
                            'children' => $children, 
-                           'arrival_date' => $arrivaldate,
-                           'departure_date' => $departuredate, 
+                           'arrival_date' => $arrival_date,
+                           'departure_date' => $departure_date,
                            'comments' => $comment,
                            'ed_website' => '72', 
                            'ed_passkey' => 'devpass');
@@ -87,7 +86,6 @@
          }
       ?>
 
-
       <!-- FORM TITLE -->
       <h2>ENQUIRY FORM</h2>
 
@@ -100,25 +98,31 @@
                <div class="col-6">
                   <div class="name" id="name">
                       <label for="first-name">FIRSTNAME</label>
-                      <input id="first-name" type="text" value="<?php if(isset($_POST['firstname'])){echo $_POST['firstname'];} ?>" name="firstname" class="form-control" placeholder="First Name" tabindex="601" required/>
+                      <input id="first-name" type="text"
+                             value="<?php if(isset($_POST['firstname'])){echo $_POST['firstname'];} ?>"
+                             name="firstname" class="form-control" placeholder="First Name" tabindex="601" required/>
                   </div>
                </div>
 
                <!-- LASTNAME -->
                <div class="col-6">
                    <label for="last-name">LASTNAME</label>
-                   <input id="last-name" type="text" value="<?php if(isset($_POST['lastname'])){echo $_POST['lastname'];} ?>" name="lastname" class="form-control" placeholder="Last Name" tabindex="602" required/>
+                   <input id="last-name" type="text"
+                          value="<?php if(isset($_POST['lastname'])){echo $_POST['lastname'];} ?>"
+                          name="lastname" class="form-control" placeholder="Last Name" tabindex="602" required/>
                </div>
             </div>
 
             <!-- EMAIL -->
             <div class='email'>
                 <label for="mce-HEAR">EMAIL ADDRESS</label>
-                <input id="mce-HEAR" type="email" value="<?php if(isset($_POST['email_address'])){echo $_POST['email_address'];} ?>" name="email_address" class="form-control" placeholder="Email Address" tabindex="603" />
+                <input id="mce-HEAR" type="email"
+                       value="<?php if(isset($_POST['email_address'])){echo $_POST['email_address'];} ?>"
+                       name="email_address" class="form-control" placeholder="Email Address" tabindex="603" />
             </div>
 
             <!-- CHOOSE COUNTRY -->
-            <div class="country">
+            <div>
                 <label for="mce-HEAR">SELECT COUNTRY</label>
                 <select name="from_country" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected>Select your country</option>
@@ -130,9 +134,12 @@
             <br>
 
             <!-- PHONE NUMBER -->
-            <div class='phone-number'>
+            <div>
                 <label for="mce-HEAR">PHONE NUMBER</label>
-                <input id="mce-HEAR" type="text" tabindex="605" required name="phone_number" class="form-control" placeholder="Phone Number" value="<?php if(isset($_POST['phone_number'])){echo $_POST['phone_number'];} ?>"/>
+                <input id="mce-HEAR" type="text"
+                       tabindex="605" required name="phone_number"
+                       class="form-control" placeholder="Phone Number"
+                       value="<?php if(isset($_POST['phone_number'])){echo $_POST['phone_number'];} ?>"/>
             </div>
 
             <!-- CHOOSE HOLIDAY TYPE -->
@@ -177,13 +184,17 @@
 
             <div class='arrival-date'>
                 <label for="arrival-date">ARRIVAL DATE</label>
-                <input ID="arrival-date" type="date" value="<?php if(isset($_POST['arrival_date'])){echo $_POST['arrival_date'];} ?>" name="arrival_date" class="form-control" placeholder="Arrival Date" tabindex="605" required/>
+                <input ID="arrival-date" type="date"
+                       value="<?php if(isset($_POST['arrival_date'])){echo $_POST['arrival_date'];} ?>"
+                       name="arrival_date" class="form-control" placeholder="Arrival Date" tabindex="605" required/>
             </div>
 
             <!-- DEPARTURE DATE -->
             <div class='departure-date'>
                 <label FOR="mce-HEAR">DEPARTURE DATE</label>
-                <input id="mce-HEAR" type="date" value="<?php if(isset($_POST['departure_date'])){echo $_POST['departure_date'];} ?>" name="departure_date" class="form-control" placeholder="Departure Date" tabindex="605" required/>
+                <input id="mce-HEAR" type="date"
+                       value="<?php if(isset($_POST['departure_date'])){echo $_POST['departure_date'];} ?>"
+                       name="departure_date" class="form-control" placeholder="Departure Date" tabindex="605" required/>
             </div>
 
             <!-- COMMENTS -->

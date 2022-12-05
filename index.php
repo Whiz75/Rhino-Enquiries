@@ -24,34 +24,106 @@
     </head>
 
     <body>
+
+      <?php
+         if(isset($_POST['enquire']))
+         {
+            //$website_reference_number = "TST".'-'.$firstname[0].''.$lastname[0];
+            
+            $firstname = $_POST['firstname'];
+            $lastname = $_POST['lastname'];
+            $email = $_POST['email_address']; 
+            $country = $_POST['from_country'];
+            $phonenumber = $_POST['phone_number'];
+            $holidaytype = $_POST['holiday_type'];
+            $adults = $_POST['no_of_adults'];
+            $children = $_POST['no_of_children'];
+            $arrivaldate = date('d-m-Y', strtotime($_POST['arrival_date']));
+            $departuredate = date('d-m-Y', strtotime($_POST['departure_date']));
+            $comment = $_POST['enquiry_comment'];  
+
+            if($arrivaldate > $departuredate)
+            {
+               echo "<script> alert('Arrival Date should be greater than Departure Date'); </script>";
+            }
+            else 
+            {
+
+               
+               $url = 'https://eddy.rhinoafrica.com/submit';
+
+               $data = array('website_reference_number' => "TST".'-'.$firstname[0].'-'.$lastname[0],
+                           'first_name' => $firstname,
+                           'last_name' => $lastname,
+                           'email' => $email,
+                           'country' => $country, 
+                           'contact_number' => $phonenumber,
+                           'holiday_type' => $holidaytype, 
+                           'adults' => $adults,
+                           'children' => $children, 
+                           'arrival_date' => $arrivaldate,
+                           'departure_date' => $departuredate, 
+                           'comments' => $comment,
+                           'ed_website' => '72', 
+                           'ed_passkey' => 'devpass');
+
+               // use key 'http' even if you send the request to https://...
+               $options = array(
+               'http' => array(
+               'header'  => "Content-type: application/json",
+               'method'  => 'POST',
+               'content' => http_build_query($data),),
+               );
+
+               $context  = stream_context_create($options);
+               $result = file_get_contents($url, false, $context);
+
+               echo $result;
+               var_dump($result);
+            }
+         }
+         else{
+            echo "not set";
+         }
+      ?>
+
+
+      <!-- FORM TITLE -->
       <h2>ENQUIRY FORM</h2>
 
-      <div class="wrapper" class="container-fluid">
-         <form name="registerForm" method="POST" action="">
+      <div class="wrapper" >
+         <!-- INPUT FORM -->
+         <form method="post" action="#">
+            <!-- FIRST & LASTNAME ROW  -->
             <div class="row">
-
                <!-- FIRSTNAME -->
                <div class="col-6">
                   <div class="name" id="name">
-                     <input type="text" value="" name="FNAME" class="form-control" placeholder="First Name" tabindex="601" required/>
+                      <label>
+                          <input type="text" value="<?php if(isset($_POST['firstname'])){echo $_POST['firstname'];} ?>" name="firstname" class="form-control" placeholder="First Name" tabindex="601" required/>
+                      </label>
                   </div>
                </div>
 
                <!-- LASTNAME -->
                <div class="col-6">
-                  <input type="text" value="" name="LNAME" class="form-control" placeholder="Last Name" tabindex="602" required/>
+                   <label>
+                       <input type="text" value="<?php if(isset($_POST['lastname'])){echo $_POST['lastname'];} ?>" name="lastname" class="form-control" placeholder="Last Name" tabindex="602" required/>
+                   </label>
                </div>
             </div>
 
             <!-- EMAIL -->
             <div class='email'>
-               <input type="email" name="EMAIL" class="form-control" placeholder="Email Address" tabindex="603" />
+                <label>
+                    <input type="email" value="<?php if(isset($_POST['email_address'])){echo $_POST['email_address'];} ?>" name="email_address" class="form-control" placeholder="Email Address" tabindex="603" />
+                </label>
             </div>
 
             <!-- CHOOSE COUNTRY -->
-            <label for="Country">SELECT COUNTRY</label>
+            <label for="from_country">SELECT COUNTRY</label>
             <div class="country">
-               <select name="Country" class="form-control" id="mce-HEAR" required>
+                <label for="mce-HEAR"></label><select name="from_country" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected>Select your country</option>
                   <option value="Australia">AU</option>
                   <option value="United Kingdom">GB</option>
@@ -62,13 +134,15 @@
 
             <!-- PHONE NUMBER -->
             <div class='phone-number'>
-               <input type="text" value="" name="NUMBER" class="form-control" placeholder="Phone Number" tabindex="605" required/>
+                <label>
+                    <input type="text" tabindex="605" required name="phone_number" class="form-control" placeholder="Phone Number" value="<?php if(isset($_POST['phone_number'])){echo $_POST['phone_number'];} ?>"/>
+                </label>
             </div>
 
             <!-- CHOOSE HOLIDAY TYPE -->
             <label for="Holiday Type">HOLIDAY TYPE</label>
             <div class="holiday-type">
-               <select name="Holiday Type" class="form-control" id="mce-HEAR" required>
+                <label for="mce-HEAR"></label><select name="holiday_type" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected>Select your holiday type</option>
                   <option value="Value">Value</option>
                   <option value="Standard">Standard</option>
@@ -79,7 +153,7 @@
             <!-- NUMBER OF ADULTS -->
             <label for="Adults">NUMBER OF ADULTS</label>
             <div class="Adults">
-               <select name="Adults" class="form-control" id="mce-HEAR" required>
+                <label for="mce-HEAR"></label><select name="no_of_adults" class="form-control" id="mce-HEAR" required>
                <option value="" disabled selected hidden>Select how adults </option>
                   <?php
                      for($j = 1; $j <= 18; $j++){
@@ -92,7 +166,7 @@
             <!-- NUMBER OF CHILDREN -->
             <label for="Children">NUMBER OF CHILDREN</label>
             <div class="Children">
-               <select name="Children" class="form-control" id="mce-HEAR" required>
+                <label for="mce-HEAR"></label><select name="no_of_children" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected hidden>Select how many children</option>
                   <?php
                      for($i = 1; $i <= 18; $i++){
@@ -106,35 +180,38 @@
             <!-- ARRIVAL DATE -->
             <label for="arrival-date">ARRIVAL DATE</label>
             <div class='arrival-date'>
-               <input type="date" value="" name="arrival-date" class="form-control" placeholder="Arrival Date" tabindex="605" required/>
+                <label>
+                    <input type="date" value="<?php if(isset($_POST['arrival_date'])){echo $_POST['arrival_date'];} ?>" name="arrival_date" class="form-control" placeholder="Arrival Date" tabindex="605" required/>
+                </label>
             </div>
 
             <!-- DEPARTURE DATE -->
             <label for="departure-date">DEPARTURE DATE</label>
             <div class='departure-date'>
-               <input type="date" value="" name="departure-date" class="form-control" placeholder="Departure Date" tabindex="605" required/>
+                <label>
+                    <input type="date" value="<?php if(isset($_POST['departure_date'])){echo $_POST['departure_date'];} ?>" name="departure_date" class="form-control" placeholder="Departure Date" tabindex="605" required/>
+                </label>
             </div>
 
             <!-- COMMENTS -->
             <label for="ENQUIRY">COMMENT</label>
             <div class="enquiry">
-               <textarea 
-                  name="enquiry"
-                  cols="60" rows="6" 
-                  class="form-control"
-                  placeholder="Leave a comment for us..." 
-                  tabindex="607">
-            
-               </textarea>
-            </div>
+                <label>
+<textarea
+   name="enquiry_comment"
+   cols="60" rows="4"
+   class="form-control"
+   placeholder="Leave a comment for us..."
+   tabindex="607">
 
+</textarea>
+                </label>
+            </div>
 
             <!-- SUBMIT ENQUIRY BUTTON -->
             <div>
-               <input class="btn btn-success" type="submit" value="Send" name="enquire"/>
+               <input class="btn btn-success" type="SUBMIT" value="Send" name="enquire" id="enquire"/>
             </div>
-
-            <div> </div>
 
          </form>
       </div>

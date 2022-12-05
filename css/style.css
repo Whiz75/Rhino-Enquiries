@@ -22,7 +22,7 @@
     font-size: 1em;
     font-weight: bold;
     font-family: monospace;
-    margin-top: 10px;
+    margin-top: 2px;
   }
   
   .btn {
@@ -34,7 +34,6 @@
   .row {
     margin-left: -5px;
     margin-right: -5px;
-    margin-bottom: 10px;
   }
 
   .col-6 {
@@ -46,7 +45,7 @@
   }
 
   footer{
-    background-color: maroon;
+    background-color: #272727;
     color: white;
     height: 30px;
     padding: 5px;

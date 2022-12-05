@@ -128,10 +128,13 @@
                </textarea>
             </div>
 
+
             <!-- SUBMIT ENQUIRY BUTTON -->
             <div>
                <input class="btn btn-success" type="submit" value="Send" name="enquire"/>
             </div>
+
+            <div> </div>
 
          </form>
       </div>

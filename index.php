@@ -24,7 +24,6 @@
     </head>
 
     <body>
-
       <?php
          if(isset($_POST['enquire']))
          {
@@ -74,15 +73,14 @@
                'content' => http_build_query($data),),
                );
 
-               $context  = stream_context_create($options);
-               $result = file_get_contents($url, false, $context);
+                // $context  = stream_context_create($options);
+                // $result = file_get_contents($url, false, $context);
+                //
+                // echo $result;
+                // var_dump($result);
 
-               echo $result;
-               var_dump($result);
+                httpPost($url,$data);
             }
-         } else
-         {
-            echo "not set";
          }
       ?>
 
@@ -122,10 +120,10 @@
             </div>
 
             <!-- CHOOSE COUNTRY -->
-            <div>
+            <div class="country">
                 <label for="mce-HEAR">SELECT COUNTRY</label>
                 <select name="from_country" class="form-control" id="mce-HEAR" required>
-                  <option value="" disabled selected>Select your country</option>
+                  <option value="" disabled selected>--Select one--</option>
                   <option value="Australia">AU</option>
                   <option value="United Kingdom">GB</option>
                   <option value="United States of America">US</option>
@@ -133,12 +131,12 @@
             </div>
             <br>
 
-            <!-- PHONE NUMBER -->
-            <div>
-                <label for="mce-HEAR">PHONE NUMBER</label>
+            <!-- CONTACT NUMBER -->
+            <div class="contact-number">
+                <label for="mce-HEAR">CONTACT NUMBER</label>
                 <input id="mce-HEAR" type="text"
-                       tabindex="605" required name="phone_number"
-                       class="form-control" placeholder="Phone Number"
+                       tabindex="605" required name="contact_number"
+                       class="form-control" placeholder="Contact Number"
                        value="<?php if(isset($_POST['phone_number'])){echo $_POST['phone_number'];} ?>"/>
             </div>
 
@@ -146,7 +144,7 @@
             <div class="holiday-type">
                 <label for="mce-HEAR">HOLIDAY TYPE</label>
                 <select name="holiday_type" class="form-control" id="mce-HEAR" required>
-                  <option value="" disabled selected>Select your holiday type</option>
+                  <option value="" disabled selected>--Select one--</option>
                   <option value="Value">Value</option>
                   <option value="Standard">Standard</option>
                   <option value="Luxury">Luxury</option>
@@ -157,7 +155,7 @@
             <div class="Adults">
                 <label for="mce-HEAR">NUMBER OF ADULTS</label>
                 <select name="no_of_adults" class="form-control" id="mce-HEAR" required>
-               <option value="" disabled selected hidden>Select how adults </option>
+               <option value="" disabled selected hidden>--Select one--</option>
                   <?php
                      for($j = 1; $j <= 18; $j++){
                         echo "<option value='".$j."' >".$j."</option>";
@@ -170,18 +168,16 @@
             <div class="Children">
                 <label for="mce-HEAR">NUMBER OF CHILDREN</label>
                 <select name="no_of_children" class="form-control" id="mce-HEAR" required>
-                  <option value="" disabled selected hidden>Select how many children</option>
+                  <option value="" disabled selected hidden>--Select one--</option>
                   <?php
                      for($i = 1; $i <= 18; $i++){
                         echo "<option value='".$i."' >".$i."</option>";
                      }
                   ?>
-                  
                </select>
             </div>
 
             <!-- ARRIVAL DATE -->
-
             <div class='arrival-date'>
                 <label for="arrival-date">ARRIVAL DATE</label>
                 <input ID="arrival-date" type="date"
@@ -201,12 +197,8 @@
             <div class="enquiry">
                 <label for="mce-HEAR">COMMENT</label>
                     <textarea
-                       id="mce-HEAR"
-                       name="enquiry_comment"
-                       cols="60" rows="4"
-                       class="form-control"
-                       placeholder="comment here..."
-                       tabindex="607">
+                       id="mce-HEAR" name="enquiry_comment" cols="60" rows="4"
+                       class="form-control" placeholder="comment here..." tabindex="607">
 
                     </textarea>
             </div>
@@ -221,6 +213,30 @@
       
       <!-- FOOTER -->
       <footer><div class="text-center p-4"> © 2022 Rhino Africa Enquiries</div></footer>
-      
     </body>
 </html>
+
+<!--method to test inputs-->
+<?php
+    function show_inputs($array){
+        echo "<pre>";
+        print_r($array);
+        echo "<pre/>";
+    }
+?>
+
+<?php
+    function httpPost($url, $data)
+    {
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        echo $response; //show output
+
+        return $response;
+    }
+?>

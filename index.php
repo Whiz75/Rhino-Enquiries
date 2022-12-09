@@ -41,12 +41,9 @@
             $departure_date = date('d-m-Y', strtotime($_POST['departure_date']));
             $comment = $_POST['enquiry_comment'];  
 
-            if($arrival_date > $departure_date)
-            {
+            if($arrival_date > $departure_date) {
                echo "<script> alert('Arrival Date should be greater than Departure Date'); </script>";
-            }
-            else 
-            {
+            } else {
                $url = 'https://eddy.rhinoafrica.com/submit';
 
                $data = array(
@@ -123,9 +120,9 @@
                 <label for="mce-HEAR">SELECT COUNTRY</label>
                 <select name="from_country" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected>--Select one--</option>
-                  <option value="Australia">AU</option>
-                  <option value="United Kingdom">GB</option>
-                  <option value="United States of America">US</option>
+                  <option value="AU">AU</option>
+                  <option value="GB">GB</option>
+                  <option value="US">US</option>
                </select>
             </div>
             <br>

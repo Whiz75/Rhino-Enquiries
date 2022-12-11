@@ -1,3 +1,8 @@
+<!--  ----------------------------------------------------------------------  -->
+<!--  DATE: 2022-DEC-08 -->
+<!--  DESCRIPTION: THIS WEBSITE ALLOWS LEADS TO SUBMIT ENQUIRIES VIA THE FORM -->
+<!--  ----------------------------------------------------------------------  -->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,9 +14,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
+        <!--  ----------------------------------------------------------------------  -->
+        <!-- Bootstrap libraries -->
+        <!--  ----------------------------------------------------------------------  -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <!--  ----------------------------------------------------------------------  -->
+        <!-- Sweet alert dialog library -->
+        <!--  ----------------------------------------------------------------------  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="js/alert.js"></script>
+
 
       <!-- site metas -->
       <title>Rhino Africa Enquiries</title>
@@ -27,55 +43,73 @@
       <?php
          if(isset($_POST['enquire']))
          {
+            $firstname = $_POST['first_name'];
+            $lastname = $_POST['last_name'];
 
-            $firstname = $_POST['firstname'];
-            $lastname = $_POST['lastname'];
-            $website_reference_number = "TST".'-'.substr($firstname,0).substr($lastname,0);
-            $email = $_POST['email_address']; 
-            $country = $_POST['from_country'];
-            $contact_number = $_POST['phone_number'];
+            //check the user id length and format it correctly
+            $code = rand(1,1000);
+            $last_digits = "00000000";
+
+            if (strlen((string)$code) == 1){
+                $last_digits = "0000000".$code;
+            }elseif (strlen((string)$code) == 2){
+                $last_digits = "000000".$code;
+            }else{
+                $last_digits = "00000".$code;
+            }
+
+            //assign the user id
+            $website_reference_number = "TST".'-'.substr($firstname,0).substr($lastname,0).$last_digits;
+            $email_address = $_POST['email'];
+            $country = $_POST['country'];
+            $contact_number = $_POST['contact_number'];
             $holiday_type = $_POST['holiday_type'];
             $adults = $_POST['no_of_adults'];
             $children = $_POST['no_of_children'];
             $arrival_date = date('d-m-Y', strtotime($_POST['arrival_date']));
             $departure_date = date('d-m-Y', strtotime($_POST['departure_date']));
-            $comment = $_POST['enquiry_comment'];  
+            $comment = $_POST['enquiry_comment'];
 
+            //check if arrival date is not greater than departure date
             if($arrival_date > $departure_date) {
-               echo "<script> alert('Arrival Date should be greater than Departure Date'); </script>";
-            } else {
-               $url = 'https://eddy.rhinoafrica.com/submit';
+               echo "<script> warningAlert() </script>";
+            }
+            else {
 
-               $data = array(
-                       'website_reference_number' => $website_reference_number,
-                           'first_name' => $firstname,
-                           'last_name' => $lastname,
-                           'email' => $email,
-                           'country' => $country, 
-                           'contact_number' => $contact_number,
-                           'holiday_type' => $holiday_type,
-                           'adults' => $adults,
-                           'children' => $children, 
-                           'arrival_date' => $arrival_date,
-                           'departure_date' => $departure_date,
-                           'comments' => $comment,
-                           'ed_website' => '72', 
-                           'ed_passkey' => 'devpass');
 
-               // use key 'http' even if you send the request to https://...
-               $options = array(
-               'http' => array(
-               'header'  => "Content-type: application/json",
-               'method'  => 'POST',
-               'content' => http_build_query($data),),
-               );
+                //API url
+                $url = 'https://eddy.rhinoafrica.com/submit';
+                //post input data to API
+                $data = array(
+                    'website_reference_number' => $website_reference_number,
+                    'first_name' => $firstname,
+                    'last_name' => $lastname,
+                    'email' => $email_address,
+                    'country' => $country,
+                    'contact_number' => $contact_number,
+                    'holiday_type' => $holiday_type,
+                    'adults' => $adults,
+                    'children' => $children,
+                    'arrival_date' => $arrival_date,
+                    'departure_date' => $departure_date,
+                    'comments' => $comment,
+                    'ed_website' => '72',
+                    'ed_passkey' => 'devpass');
 
-                // $context  = stream_context_create($options);
-                // $result = file_get_contents($url, false, $context);
-                // echo $result;
-                // var_dump($result);
+                 $options = array(
+                 'http' => array(
+                 'header'  => "Content-type: application/json",
+                 'method'  => 'POST',
+                  'content' => http_build_query($data),),
+                  );
 
-                httpPost($url,$data);
+                 $context  = stream_context_create($options);
+                 $result = file_get_contents($url, false, $context);
+                 echo $result;
+                 var_dump($result);
+
+                 //call Php method to create API POST method
+                 httpPost($url,$data);
             }
          }
       ?>
@@ -85,40 +119,45 @@
 
       <div class="wrapper" >
          <!-- INPUT FORM -->
-         <form method="post" action="#">
+         <form method="post" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" >
+
+             <!-- TWO HIDDEN INPUTS FOR LINKING TO THE OBJECT -->
+             <input type=hidden name="oid" value="00D8d000008DJBg">
+             <input type=hidden name="retURL" value="http://rhino-enquiries.great-site.net">
+
             <!-- FIRST & LASTNAME ROW  -->
             <div class="row">
                <!-- FIRSTNAME -->
                <div class="col-6">
                   <div class="name" id="name">
-                      <label for="first-name">FIRSTNAME</label>
-                      <input id="first-name" type="text"
-                             value="<?php if(isset($_POST['firstname'])){echo $_POST['firstname'];} ?>"
-                             name="firstname" class="form-control" placeholder="First Name" tabindex="601" required/>
+                      <label for="firstname">FIRSTNAME</label>
+                      <input id="firstname" type="text"
+                             value="<?php if(isset($_POST['first_name'])){echo $_POST['first_name'];} ?>"
+                             name="first_name" class="form-control" placeholder="First Name" tabindex="601" required/>
                   </div>
                </div>
 
                <!-- LASTNAME -->
                <div class="col-6">
-                   <label for="last-name">LASTNAME</label>
-                   <input id="last-name" type="text"
-                          value="<?php if(isset($_POST['lastname'])){echo $_POST['lastname'];} ?>"
-                          name="lastname" class="form-control" placeholder="Last Name" tabindex="602" required/>
+                   <label for="lastname">LASTNAME</label>
+                   <input id="lastname" type="text"
+                          value="<?php if(isset($_POST['last_name'])){echo $_POST['last_name'];} ?>"
+                          name="last_name" class="form-control" placeholder="Last Name" tabindex="602" required/>
                </div>
             </div>
 
             <!-- EMAIL -->
             <div class='email'>
-                <label for="mce-HEAR">EMAIL ADDRESS</label>
-                <input id="mce-HEAR" type="email"
-                       value="<?php if(isset($_POST['email_address'])){echo $_POST['email_address'];} ?>"
-                       name="email_address" class="form-control" placeholder="Email Address" tabindex="603" />
+                <label for="email_address">EMAIL ADDRESS</label>
+                <input id="email_address" type="email"
+                       value="<?php if(isset($_POST['email'])){echo $_POST['email'];} ?>"
+                       name="email" class="form-control" placeholder="Email Address" tabindex="603" />
             </div>
 
             <!-- CHOOSE COUNTRY -->
             <div class="country">
                 <label for="mce-HEAR">SELECT COUNTRY</label>
-                <select name="from_country" class="form-control" id="mce-HEAR" required>
+                <select name="country" class="form-control" id="mce-HEAR" required>
                   <option value="" disabled selected>--Select one--</option>
                   <option value="AU">AU</option>
                   <option value="GB">GB</option>
@@ -133,7 +172,7 @@
                 <input id="mce-HEAR" type="text"
                        tabindex="605" required name="contact_number"
                        class="form-control" placeholder="Contact Number"
-                       value="<?php if(isset($_POST['phone_number'])){echo $_POST['phone_number'];} ?>"/>
+                       value="<?php if(isset($_POST['contact_number'])){echo $_POST['contact_number'];} ?>"/>
             </div>
 
             <!-- CHOOSE HOLIDAY TYPE -->
@@ -189,6 +228,16 @@
                        name="departure_date" class="form-control" placeholder="Departure Date" tabindex="605" required/>
             </div>
 
+             //check if arrival date is greater than departure date
+             <?php
+                 $date_of_arrival = date('d-m-Y', strtotime($_POST['arrival_date']));
+                 $date_of_departure = date('d-m-Y', strtotime($_POST['departure_date']));
+
+                 if($date_of_arrival > $date_of_departure) {
+                   echo "<script> warningAlert() </script>";
+                 }
+             ?>
+
             <!-- COMMENTS -->
             <div class="enquiry">
                 <label for="mce-HEAR">COMMENT</label>
@@ -201,7 +250,7 @@
 
             <!-- SUBMIT ENQUIRY BUTTON -->
             <div>
-               <input class="btn btn-success" type="SUBMIT" value="Send" name="enquire" id="enquire"/>
+               <input class="btn btn-success" type="SUBMIT" value="Submit" name="enquire" id="enquire"/>
             </div>
 
          </form>
@@ -236,3 +285,4 @@
         return $response;
     }
 ?>
+
